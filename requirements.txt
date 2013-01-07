@@ -1,0 +1,2 @@
+datastore>=0.3.4
+nose==1.2.1

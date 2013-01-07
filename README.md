@@ -1,7 +1,8 @@
-# datastore-objects
+# datastore.objects
 
-`datastore-objects` is a simple *object mapper* on top of
-[datastore](https://github.com/jbenet/datastore) (not relational). Thanks to
+[`datastore.objects`](https://github.com/datastore/datastore.objects) is a
+simple *object mapper* on top of
+[`datastore`](https://github.com/jbenet/datastore) (not relational). Thanks to
 datastore's versatility, it makes it easy to (serialize and) persist custom
 classes to any sort of data storage service.
 
@@ -10,14 +11,14 @@ Notice: please familiarize yourself with `datastore` first.
 ## Install
 
 
-    pip install datastore-objects
+    pip install datastore.objects
 
 
 ## Interface
 
 ### Key
 
-`datastore-objects` uses the default `datastore.Key`, making significant use
+`datastore.objects` uses the default `datastore.Key`, making significant use
 of the `type` and `instance` fragments.
 
 ```python
@@ -33,7 +34,7 @@ Key('/Scientist:Tesla')
 
 ### Model
 
-`datastore-objects` provides a class that you inherit from to define your
+`datastore.objects` provides a class that you inherit from to define your
 models. datastore.objects.Model handles the datastore serializing and
 deserializing, attribute validation, etc.
 
@@ -46,7 +47,7 @@ deserializing, attribute validation, etc.
 
 ### Attribute
 
-`datastore-objects` uses descriptor Attributes to track the properties you wish
+`datastore.objects` uses descriptor Attributes to track the properties you wish
 to store. This is heavily based on how other python ORMs (django, app engine)
 do it. In short, you define model attributes like this:
 
@@ -67,7 +68,7 @@ do it. In short, you define model attributes like this:
 
 ### ObjectDatastore
 
-`datastore-objects` provides a `ShimDatastore` that wraps any other datastore.
+`datastore.objects` provides a `ShimDatastore` that wraps any other datastore.
 Thus you can use any of the various datastores to persist your objects.
 `ObjectDatastore` makes sure to serialize (on put) and deserialize (on get)
 data properly, and construct your classes.
@@ -98,7 +99,7 @@ data properly, and construct your classes.
 
 #### Author
 
-`datastore-objects` is written by [Juan Batiz-Benet](https://github.com/jbenet),
+`datastore.objects` is written by [Juan Batiz-Benet](https://github.com/jbenet),
 of [Athena](http://athena.ai).
 
 #### License
@@ -108,5 +109,5 @@ the MIT License.
 
 #### Contact
 
-Project webpage: https://github.com/jbenet/object-datastore.
+Project webpage: https://github.com/datastore/datastore.objects.
 Issues: https://github.com/jbenet/object-datastore/issues
