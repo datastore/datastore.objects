@@ -231,6 +231,31 @@ class TestModel(unittest.TestCase):
     self.assertEqual(instance.data, data)
 
 
+  # updateAttributes tests
+
+  def test_update_attributes_is_method(self):
+    self.assertTrue(hasattr(Model, 'updateAttributes'))
+    self.assertTrue(callable(Model.updateAttributes))
+
+  def test_update_attributes_updates(self):
+
+    class A(Model):
+      foo = Attribute()
+      bar = Attribute()
+
+    data = {'name': 'foo', 'foo': 'bar'}
+    instance = A.withData(data)
+    self.assertEqual(instance.data, {'name': 'foo', 'foo': 'bar', 'bar':None})
+
+    data2 = {'foo': 'biz', 'bar': 'biz', 'biz': 'baz'}
+    instance.updateAttributes(data2)
+    self.assertEqual(instance.data, {'name': 'foo', 'foo': 'biz', 'bar':'biz'})
+
+    data3 = {'bar': 'baz', 'biz': 'foo'}
+    instance.updateAttributes(data3)
+    self.assertEqual(instance.data, {'name': 'foo', 'foo': 'biz', 'bar':'baz'})
+
+
   # withData tests
 
   def test_with_data_is_classmethod(self):

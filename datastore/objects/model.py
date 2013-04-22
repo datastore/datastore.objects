@@ -132,6 +132,15 @@ class Model(object):
     self.data.update(data)
 
 
+  def updateAttributes(self, data):
+    if self.key_name_attr in data:
+      self.data[self.key_name_attr] = data[self.key_name_attr]
+
+    for key in self._attributes.keys():
+      if key in data:
+        setattr(self, key, data[key])
+
+
   @classmethod
   def withData(cls, data):
     '''Constructs a version of this model with given data'''
