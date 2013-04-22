@@ -56,13 +56,13 @@ class Model(object):
 
     # Attribute raw names start with _
     if not _name.startswith('_'):
-      return super(Model, self).__getattr__(_name)
+      return super(Model, self).__getattribute__(_name)
 
     name = _name.lstrip('_')
 
     # if it's not an Attribute, proceed as normal.
     if name not in self._attributes:
-      return super(Model, self).__getattr__(_name)
+      return super(Model, self).__getattribute__(_name)
 
     # it's an Attribute, set it to the `data` dictionary
     if name in self.data:
