@@ -13,8 +13,8 @@ class Model(object):
   __metaclass__ = AttributeMetaclass
 
 
-  # name of the key_name attribute in model data
-  key_name_attr = 'name'
+  # name of the key attribute in model data
+  key_attr = 'key'
 
 
   def __init__(self, keyOrName):
@@ -48,7 +48,7 @@ class Model(object):
       raise TypeError('key.type should be %s' % self.__class__.key.name)
 
     self._key = key
-    self.data[self.key_name_attr] = key.name
+    self.data[self.key_attr] = str(key)
 
 
   def __getattr__(self, _name):
@@ -133,8 +133,9 @@ class Model(object):
 
 
   def updateAttributes(self, data):
-    if self.key_name_attr in data:
-      self.data[self.key_name_attr] = data[self.key_name_attr]
+    if self.key_attr in data:
+      key = data[self.key_attr]
+      self._set_key(key)
 
     for key in self._attributes.keys():
       if key in data:
@@ -144,8 +145,7 @@ class Model(object):
   @classmethod
   def withData(cls, data):
     '''Constructs a version of this model with given data'''
-    key = data.get('key', None)
-    name = data.get(cls.key_name_attr, None)
-    instance = cls(Key(key) if key else name)
+    key = data[cls.key_attr]
+    instance = cls(Key(key))
     instance.updateData(data)
     return instance

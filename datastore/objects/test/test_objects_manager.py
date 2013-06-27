@@ -34,7 +34,7 @@ class TestManager(unittest.TestCase):
     ds = datastore.DictDatastore()
     mgr = Manager(ds)
     key = Key('/model:bar')
-    data = {'name': 'bar', 'foo': 'bar'}
+    data = {'key': str(key), 'foo': 'bar'}
     ds.put(key, data)
     instance = mgr.get('bar')
     self.assertTrue(isinstance(instance, Manager.model))
@@ -47,7 +47,7 @@ class TestManager(unittest.TestCase):
     ds = datastore.DictDatastore()
     mgr = Manager(ds, model=Foo)
     key = Key('/foo:bar')
-    data = {'name': 'bar', 'foo': 'bar'}
+    data = {'key': str(key), 'foo': 'bar'}
     ds.put(key, data)
     instance = mgr.get('bar')
     self.assertTrue(isinstance(instance, Manager.model))

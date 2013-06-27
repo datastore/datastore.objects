@@ -58,7 +58,7 @@ class TestObjectDatastore(unittest.TestCase):
     dds = datastore.DictDatastore()
     ods = ObjectDatastore(dds)
     key = Key('/model:foo')
-    data = {'name': 'foo', 'foo': 'bar'}
+    data = {'key': str(key), 'foo': 'bar'}
     dds.put(key, data)
     instance = ods.get(key)
     self.assertEqual(instance.data, data)
@@ -89,15 +89,15 @@ class TestObjectDatastore(unittest.TestCase):
     dds = datastore.DictDatastore()
     ods = ObjectDatastore(dds)
     key = Key('/model:foo')
-    data = {'name': 'foo', 'foo': 'bar'}
+    data = {'key': str(key), 'foo': 'bar'}
     instance = Model.withData(data)
-    self.assertFalse('key' in data)
-    self.assertFalse('key' in instance.data)
+    self.assertTrue('key' in data)
+    self.assertTrue('key' in instance.data)
 
     ods.put(key, instance)
     data = dds.get(key)
-    self.assertTrue('name' in data)
-    self.assertEqual(data['name'], 'foo')
+    self.assertTrue('key' in data)
+    self.assertEqual(data['key'], '/model:foo')
 
 
   def test_delete_and_contains_work(self):

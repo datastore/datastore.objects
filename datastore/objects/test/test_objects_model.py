@@ -184,9 +184,8 @@ class TestModel(unittest.TestCase):
       Model(Key('/Model:foo'))
 
   def test_key_validation_with_parent(self):
-    Model(Key('/Foo:bar/model:foo'))
-    with self.assertRaises(TypeError):
-      Model(Key('/Foo:bar/Model:foo'))
+    Model(Key('/foo:bar/model:foo'))
+    self.assertRaises(TypeError, Model, Key('/Foo:bar/Model:foo'))
 
   def test_key_inheritance(self):
     class Foo(Model): pass
@@ -220,7 +219,7 @@ class TestModel(unittest.TestCase):
     self.assertTrue(callable(Model.updateData))
 
   def test_update_data_updates(self):
-    data = {'name': 'foo', 'foo': 'bar'}
+    data = {'key': '/model:foo', 'foo': 'bar'}
     instance = Model.withData(data)
     self.assertEqual(instance.data, data)
 
@@ -243,17 +242,18 @@ class TestModel(unittest.TestCase):
       foo = Attribute()
       bar = Attribute()
 
-    data = {'name': 'foo', 'foo': 'bar'}
+    key = '/a:foo'
+    data = {'key': key, 'foo': 'bar'}
     instance = A.withData(data)
-    self.assertEqual(instance.data, {'name': 'foo', 'foo': 'bar', 'bar':None})
+    self.assertEqual(instance.data, {'key': key, 'foo': 'bar', 'bar':None})
 
     data2 = {'foo': 'biz', 'bar': 'biz', 'biz': 'baz'}
     instance.updateAttributes(data2)
-    self.assertEqual(instance.data, {'name': 'foo', 'foo': 'biz', 'bar':'biz'})
+    self.assertEqual(instance.data, {'key': key, 'foo': 'biz', 'bar':'biz'})
 
     data3 = {'bar': 'baz', 'biz': 'foo'}
     instance.updateAttributes(data3)
-    self.assertEqual(instance.data, {'name': 'foo', 'foo': 'biz', 'bar':'baz'})
+    self.assertEqual(instance.data, {'key': key, 'foo': 'biz', 'bar':'baz'})
 
 
   # withData tests
@@ -264,7 +264,7 @@ class TestModel(unittest.TestCase):
 
 
   def test_with_data_constructs_instance(self):
-    instance = Model.withData({'name': 'foo'})
+    instance = Model.withData({'key': '/model:foo'})
     self.assertTrue(isinstance(instance, Model))
 
 
@@ -272,45 +272,44 @@ class TestModel(unittest.TestCase):
     class Foo(Model): pass
     class Bar(Foo): pass
 
-    self.assertTrue(isinstance(Model.withData({'name': 'foo'}), Model))
-    self.assertTrue(isinstance(Foo.withData({'name': 'foo'}), Foo))
-    self.assertTrue(isinstance(Bar.withData({'name': 'foo'}), Bar))
+    self.assertTrue(isinstance(Model.withData({'key': '/model:foo'}), Model))
+    self.assertTrue(isinstance(Foo.withData({'key': '/foo:foo'}), Foo))
+    self.assertTrue(isinstance(Bar.withData({'key': '/bar:foo'}), Bar))
 
 
   def test_with_data_uses_key_attr(self):
     for key in ['/model:foo', '/foo:bar/model:biz', '/a/model:biz']:
-      instance = Model.withData({'key': key, 'name': 'bar'})
+      instance = Model.withData({'key': key})
       self.assertEqual(instance.key, Key(key))
 
-    with self.assertRaises(TypeError):
-      Model.withData({'key': '/foo:bar', 'name': 'bar'})
-      Model.withData({'key': '/model:foo/foo', 'name': 'bar'})
-      Model.withData({'key': '/model:foo/foo:bar', 'name': 'bar'})
+    self.assertRaises(TypeError, Model.withData, {'key': '/foo:bar'})
+    self.assertRaises(TypeError, Model.withData, {'key': '/model:foo/foo'})
+    self.assertRaises(TypeError, Model.withData, {'key': '/model:foo/foo:bar'})
 
 
   def test_with_data_uses_name_attr_for_key(self):
-    instance = Model.withData({'name': 'bar'})
+    instance = Model.withData({'key': '/model:bar'})
     self.assertEqual(instance.key, Key('/model:bar'))
 
 
-  def test_with_data_requires_key_or_name_attr(self):
-    with self.assertRaises(TypeError):
+  def test_with_data_requires_key_attr(self):
+    with self.assertRaises(KeyError):
       Model.withData({'foo': 'bar'})
 
 
   def test_with_data_assigns_data_attr(self):
-    data = {'name': 'foo', 'foo': 'bar'}
+    data = {'key': '/model:foo', 'foo': 'bar'}
     instance = Model.withData(data)
     self.assertEqual(instance.data, data)
 
 
-  # change key_name_attr
+  # change key_attr
 
-  def test_with_different_key_name_attr(self):
+  def test_with_different_key_attr(self):
     class Foo(Model):
-      key_name_attr = 'biz'
+      key_attr = 'biz'
 
-    instance = Foo.withData({'biz': 'bar'})
+    instance = Foo.withData({'biz': '/foo:bar'})
     self.assertEqual(instance.key, Key('/foo:bar'))
 
 
@@ -319,14 +318,14 @@ class TestModel(unittest.TestCase):
   def test_str(self):
     class Foo(Model): pass
 
-    instance = Foo.withData({'name': 'bar', 'foo': 'bar'})
+    instance = Foo.withData({'key': '/foo:bar', 'foo': 'bar'})
     self.assertEqual(str(instance), '<Foo /foo:bar>')
 
 
   def test_repr(self):
     class Foo(Model): pass
 
-    data = {'name': 'bar', 'foo': 'bar'}
+    data = {'key': '/foo:bar', 'foo': 'bar'}
     instance = Foo.withData(data)
     self.assertEqual(repr(instance), 'Foo.withData(%s)' % data)
 
