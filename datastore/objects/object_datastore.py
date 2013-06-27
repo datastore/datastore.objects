@@ -26,13 +26,16 @@ class ObjectDatastore(datastore.ShimDatastore):
 
   def get(self, key):
     data = super(ObjectDatastore, self).get(key)
-    data = copy.deepcopy(data)
-    return self.model.withData(data) if data else None
+    if data and isinstance(data, dict) and 'key' in data:
+      data = copy.deepcopy(data)
+      return self.model.withData(data)
+    return data
 
 
-  def put(self, key, instance):
-    data = copy.deepcopy(instance.data)
-    super(ObjectDatastore, self).put(key, data)
+  def put(self, key, value):
+    if isinstance(value, self.model):
+      value = copy.deepcopy(value.data)
+    super(ObjectDatastore, self).put(key, value)
 
 
   def query(self, query):
