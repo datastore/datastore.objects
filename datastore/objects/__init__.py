@@ -1,6 +1,6 @@
 __author__ = 'Juan Batiz-Benet'
 __email__ = 'juan@benet.ai'
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 __doc__ = '''
 `datastore-objects` is a simple *object mapper* on top of
 [datastore](https://github.com/jbenet/datastore) (not relational). Thanks to
