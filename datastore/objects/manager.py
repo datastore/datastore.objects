@@ -1,5 +1,6 @@
 from .model import Key
 from .model import Model
+from datastore import Query
 from .object_datastore import ObjectDatastore
 
 
@@ -50,3 +51,21 @@ class Manager(object):
   def delete(self, key_or_name):
     '''Deletes instance named by `key_or_name`.'''
     self.datastore.delete(self.key(key_or_name))
+
+
+  def init_query(self):
+    '''Initiates a Query object for the model'''
+    if not self.model:
+      raise Exception('Can not query when no model is set on the manager')
+    return Query(Key('/' + self.model.key_type))
+
+
+  def query(self, query):
+    '''Execute a query on the underlying datastore'''
+    return self.datastore.query(query)
+
+
+  def remove_all_items(self):
+    '''Removes all items from the datastore'''
+    for obj in self.query(self.init_query()):
+      self.delete(obj.key)
